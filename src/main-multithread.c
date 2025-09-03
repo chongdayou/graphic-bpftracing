@@ -102,7 +102,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	for (int i=1; i<argc; i++) {
-		pthread_join(threads[i], NULL);
+		if (pthread_join(threads[i], NULL) != 0) {
+			perror("pthread join");
+		}
 	}
 
 	pthread_mutex_destroy(&lock);

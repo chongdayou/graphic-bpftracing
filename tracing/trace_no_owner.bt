@@ -22,6 +22,7 @@ END {
 
 	// pthread
 	clear(@threadCreation);
+	clear(@threadJoin);
 }
 
 // -- scheduler system calls --
@@ -136,7 +137,7 @@ uprobe:/lib/x86_64-linux-gnu/libc.so.6:free
 		@heapThread[tid] -= $size;
 	}
 	$isMain = tid == pid ? "true" : "false";
-	if ($isMain) {
+	if ($isMain == "true") {
 		@heapProc -= (uint64)$size;
 	} else {
 		@heapThread[@main_pid] += $size;
@@ -145,12 +146,12 @@ uprobe:/lib/x86_64-linux-gnu/libc.so.6:free
 }
 
 // -- libpthread --
-#define LIBPTHREAD "/lib/x86_64-linux-gnu/libpthread.so.0"
+// @LIBPTHREAD = "/lib/x86_64-linux-gnu/libc.so.6";
 
 /*
 record timestamp when entering pthread_create()
 */
-uprobe:LIBPTHREAD:"pthread_create"
+uprobe:libc:pthread_create
 /comm == @program_name/
 {
 	@threadCreation[tid] = nsecs;
@@ -163,13 +164,40 @@ record timestamp when finishing pthread_create()
 custom_stat_1 = success thread creation or not
 custom_stat_2 = time spent in pthread_create() (ns)
 */
-uretprobe:LIBPTHREAD:"pthread_create"
+uretprobe:libc:pthread_create
 /comm == @program_name/
 {
 	$t = nsecs;
 	$finish = $t;
 	$start = @threadCreation[tid]; delete(@threadCreation[tid]);
 	$isMain = tid == pid ? "true" : "false";
-	$success = retval ? "true" : "false";
+	$success = retval == 0 ? "true" : "false";
 	printf("%llu,%d,%s,ret:pthread_create(),%s,%d,,\n", $t, tid, $isMain, $success, $finish - $start);
+}
+
+/*
+record timestamp when entering pthread_join()
+*/
+uprobe:libc:pthread_join
+/comm == @program_name/
+{
+	@threadJoin[tid] = nsecs;
+	$isMain = tid == pid ? "true" : "false";
+	printf("%llu,%d,%s,ent:pthread_join(),,,,\n", nsecs, tid, $isMain);
+}
+
+/*
+record timestamp when finishing pthread_join()
+custom_stat_1 = success thread creation or not
+custom_stat_2 = time spent in pthread_join() (ns)
+*/
+uretprobe:libc:pthread_join
+/comm == @program_name/
+{
+	$t = nsecs;
+	$finish = $t;
+	$start = @threadJoin[tid]; delete(@threadJoin[tid]);
+	$isMain = tid == pid ? "true" : "false";
+	$success = retval == 0 ? "true" : "false";
+	printf("%llu,%d,%s,ret:pthread_join(),%s,%d,,\n", $t, tid, $isMain, $success, $finish - $start);
 }
