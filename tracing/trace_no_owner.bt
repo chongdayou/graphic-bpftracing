@@ -135,13 +135,10 @@ uprobe:/lib/x86_64-linux-gnu/libc.so.6:free
 	delete(@ptrSize[arg0]);
 	if ($size) {
 		@heapThread[tid] -= $size;
+		@heapProc -= (uint64)$size;
 	}
 	$isMain = tid == pid ? "true" : "false";
-	if ($isMain == "true") {
-		@heapProc -= (uint64)$size;
-	} else {
-		@heapThread[@main_pid] += $size;
-	}
+
 	printf("%llu,%d,%s,free(),%lld,%lld,%lld,\n", nsecs, tid, $isMain, (int64)@heapProc, (int64)@heapThread[tid], (int64)$size);
 }
 
@@ -225,7 +222,7 @@ uretprobe:libc:pthread_mutex_lock
 	$finish = $t;
 	$time = $finish - @pthreadMutexLockStart; clear(@pthreadMutexLockStart);
 	$isMain = tid == pid ? "true" : "false";
-	printf("%llu,%d,%s,ret:pthread_mutex_lock,%llu,,,\n", $t, tid, $isMain, $time);
+	printf("%llu,%d,%s,ret:pthread_mutex_lock(),%llu,,,\n", $t, tid, $isMain, $time);
 }
 
 /*
@@ -251,5 +248,5 @@ uretprobe:libc:pthread_mutex_unlock
 	$finish = $t;
 	$time = $finish - @pthreadMutexUnlockStart; clear(@pthreadMutexUnlockStart);
 	$isMain = tid == pid ? "true" : "false";
-	printf("%llu,%d,%s,ret:pthread_mutex_unlock,%llu,,,\n", $t, tid, $isMain, $time);
+	printf("%llu,%d,%s,ret:pthread_mutex_unlock(),%llu,,,\n", $t, tid, $isMain, $time);
 }
