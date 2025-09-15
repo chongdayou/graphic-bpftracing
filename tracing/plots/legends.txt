@@ -1,14 +1,40 @@
-Fig. process memory.
-Heap memory size trace throughout the life time of a known program. This figure shows the change in heap memory introduced 
-by each call of malloc(), realloc(), and free(). The custom program counts word occurence in multiple files with 
-worker threads, then join together in a large binary tree. The program runs on 5 short files of various length.
+Fig. process memory.  Heap memory size trace throughout the life time of
+a known program. This figure shows the change in heap memory introduced
+by each call of malloc(), realloc(), and free(). The custom program
+counts word occurence in multiple files with worker threads, then join
+together in a large binary tree. The program runs on 5 short files of
+various length.
 
-Fig. pthread times.
-Pthread functions runtime distribution. This figure shows the general distribution of time spent in two basic pthread 
-library functions, pthread_create() and pthread_join(). All functions are called with the same parameter settings.
+Fig. pthread times.  Pthread functions runtime distribution. This figure
+shows the general distribution of time spent in two basic pthread library
+functions, pthread_create() and pthread_join(). All functions are called
+with the same parameter settings.
 
-Fig. dynamic memory.
-Thread memories on top of program memory. This figure shows the cumulative change each thread contributes to the heap memory. 
-All calls to malloc(), realloc(), and free() are strictly traced to the thread where they are called, and only add to the 
-corresponding line in this figure. Note that all threads in a program share the same heap, this figure just separate them 
-to understand what each thread is doing.
+Fig. dynamic memory.  Thread memories on top of program memory. This
+figure shows the cumulative change each thread contributes to the heap
+memory.  All calls to malloc(), realloc(), and free() are strictly traced
+to the thread where they are called, and only add to the corresponding
+line in this figure. Note that all threads in a program share the same
+heap, this figure just separate them to understand what each thread
+is doing.
+
+Fixed:
+
+Fig. process memory.  Heap memory usage over time. This figure shows the
+heap memory usage after each call of malloc(), realloc(), and free(). The
+workload counts word occurence in multiple files with worker threads,
+then join together in a single binary tree. The program runs on 5 files
+from 1.8KB to 9.7KB in length, taken from script to Hamlet by Shakespear.
+
+Fig. pthread times.  Pthread functions runtime distribution. This figure
+shows the general distribution of time spent in two basic pthread library
+functions, pthread_create() and pthread_join(). All functions are called
+with the same parameter settings.
+
+Fig. dynamic memory.  Thread memories on top of program memory. This
+figure shows the cumulative change each thread contributes to the heap
+memory.  All calls to malloc(), realloc(), and free() are strictly traced
+to the thread where they are called, and only add to the corresponding
+line in this figure. Note that all threads in a program share the same
+heap, this figure just separate them to understand what each thread
+is doing.
