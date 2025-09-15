@@ -188,7 +188,7 @@ uprobe:libc:pthread_join
 
 /*
 record timestamp when finishing pthread_join()
-custom_stat_1 = success thread creation or not
+custom_stat_1 = success thread join or not
 custom_stat_2 = time spent in pthread_join() (ns)
 */
 uretprobe:libc:pthread_join
@@ -200,4 +200,56 @@ uretprobe:libc:pthread_join
 	$isMain = tid == pid ? "true" : "false";
 	$success = retval == 0 ? "true" : "false";
 	printf("%llu,%d,%s,ret:pthread_join(),%s,%d,,\n", $t, tid, $isMain, $success, $finish - $start);
+}
+
+/*
+record entering pthread_mutex_lock()
+*/
+uprobe:libc:pthread_mutex_lock
+/comm == @program_name/
+{
+	$t = nsecs;
+	@pthreadMutexLockStart = $t;
+	$isMain = tid == pid ? "true" : "false";
+	printf("%llu,%d,%s,ent:pthread_mutex_lock(),,,,\n", $t, tid, $isMain);
+}
+
+/*
+record ending pthread_mutex_lock()
+custom_stat_1 = time spent in pthread_mutex_lock()
+*/
+uretprobe:libc:pthread_mutex_lock
+/comm == @program_name/
+{
+	$t = nsecs;
+	$finish = $t;
+	$time = $finish - @pthreadMutexLockStart; clear(@pthreadMutexLockStart);
+	$isMain = tid == pid ? "true" : "false";
+	printf("%llu,%d,%s,ret:pthread_mutex_lock,%llu,,,\n", $t, tid, $isMain, $time);
+}
+
+/*
+record entering pthread_mutex_unlock()
+*/
+uprobe:libc:pthread_mutex_unlock
+/comm == @program_name/
+{
+	$t = nsecs;
+	@pthreadMutexUnlockStart = $t;
+	$isMain = tid == pid ? "true" : "false";
+	printf("%llu,%d,%s,ent:pthread_mutex_unlock(),,,,\n", $t, tid, $isMain);
+}
+
+/*
+record ending pthread_mutex_unlock()
+custom_stat_1 = time spent in pthread_mutex_unlock()
+*/
+uretprobe:libc:pthread_mutex_unlock
+/comm == @program_name/
+{
+	$t = nsecs;
+	$finish = $t;
+	$time = $finish - @pthreadMutexUnlockStart; clear(@pthreadMutexUnlockStart);
+	$isMain = tid == pid ? "true" : "false";
+	printf("%llu,%d,%s,ret:pthread_mutex_unlock,%llu,,,\n", $t, tid, $isMain, $time);
 }
