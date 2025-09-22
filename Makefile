@@ -1,15 +1,18 @@
+CFLAGS=-Wall -O2 -MMD -MP -pg
+TXTFILES=text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt
+
 default:
 	mkdir -p build
 	$(MAKE) trace2Multithread
 
 trace2Multithread: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
-	-c './build/multithreadMain text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt' \
+	-c './build/multithreadMain $(TXTFILES)' \
 	| tee tracing/trace_no_owner_results.csv > /dev/null
 
 traceMultithread: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace.bt \
-	-c './build/multithreadMain text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt' \
+	-c './build/multithreadMain $(TXTFILES)' \
 	| tee tracing/trace_results.csv > /dev/null
 
 runAatMain: cleanAatMain buildAat
@@ -52,30 +55,30 @@ cleanMultithreadMain:
 	rm -f build/*{.o,.d,multithreadMain}
 
 build/main-multithread.o: src/main-multithread.c build/counter.o build/aat.o
-	gcc -c src/main-multithread.c -o build/main-multithread.o -Wall -O2 -MMD -MP
+	gcc -c src/main-multithread.c -o build/main-multithread.o $(CFLAGS)
 
 build/main-sender.o: src/main-sender.c build/counter.o
-	gcc -c src/main-sender.c -o build/main-sender.o -Wall -O2 -MMD -MP
+	gcc -c src/main-sender.c -o build/main-sender.o $(CFLAGS)
 
 build/main-multiproc.o: src/main-multiproc.c build/counter.o build/strbuffer.o
-	gcc -c src/main-multiproc.c -o build/main-multiproc.o -Wall -O2 -MMD -MP
+	gcc -c src/main-multiproc.c -o build/main-multiproc.o $(CFLAGS)
 
 build/main-counter.o: src/main-counter.c build/counter.o
-	gcc -c src/main-counter.c -o build/main-counter.o -Wall -O2 -MMD -MP
+	gcc -c src/main-counter.c -o build/main-counter.o $(CFLAGS)
 
 build/counter.o: src/counter.c build/aat.o
-	gcc -c src/counter.c -o build/counter.o -Wall -O2 -MMD -MP
+	gcc -c src/counter.c -o build/counter.o $(CFLAGS)
 
 build/main-aat.o: src/main-aat.c build/aat.o
-	gcc -c src/main-aat.c -o build/main-aat.o -Wall -O2 -MMD -MP
+	gcc -c src/main-aat.c -o build/main-aat.o $(CFLAGS)
 
 build/aat.o: src/aat.c build/stack.o build/strbuffer.o
-	gcc -c src/aat.c -Iinclude -o build/aat.o -Wall -O2 -MMD -MP
+	gcc -c src/aat.c -Iinclude -o build/aat.o $(CFLAGS)
 
 build/stack.o: src/stack.c
-	gcc -c src/stack.c -Iinclude -o build/stack.o -Wall -O2 -MMD -MP
+	gcc -c src/stack.c -Iinclude -o build/stack.o $(CFLAGS)
 
 build/strbuffer.o: src/strbuffer.c
-	gcc -c src/strbuffer.c -Iinclude -o build/strbuffer.o -Wall -O2 -MMD -MP
+	gcc -c src/strbuffer.c -Iinclude -o build/strbuffer.o $(CFLAGS)
 
 -include build/*.d

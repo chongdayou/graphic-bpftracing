@@ -7,6 +7,9 @@
 build/
 .venv/
 todos.txt
+gmon.out
+output-python.txt
+src/counter.py
 
 # User-specific files
 *.rsuser
