@@ -3,12 +3,53 @@ TXTFILES=text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIII
 
 default:
 	mkdir -p build
-	$(MAKE) trace2Multithread
+	$(MAKE) trace2Multithread1CPU
+	$(MAKE) trace2Multithread2CPU
+	$(MAKE) trace2Multithread3CPU
+	$(MAKE) trace2Multithread4CPU
+	$(MAKE) trace2Multithread5CPU
+	$(MAKE) trace2Multithread6CPU
 
 trace2Multithread: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
 	| tee tracing/trace_no_owner_results.csv > /dev/null
+
+trace2Multithread1CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_1_CPU_results.csv > /dev/null
+
+trace2Multithread2CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0-1 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_2_CPU_results.csv > /dev/null
+
+trace2Multithread3CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0-2 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_3_CPU_results.csv > /dev/null
+
+trace2Multithread4CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0-3 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_4_CPU_results.csv > /dev/null
+
+trace2Multithread5CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0-4 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_5_CPU_results.csv > /dev/null
+
+trace2Multithread6CPU: cleanMultithreadMain buildMultithread
+	taskset -c 0-5 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_6_CPU_results.csv > /dev/null
 
 traceMultithread: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace.bt \
@@ -22,10 +63,10 @@ runCounterMain: cleanCounterMain buildCounter
 	./build/counterMain text/HamletActISceneII.txt
 
 runMultiprocMain: cleanMultiprocMain buildMultiproc buildSender
-	./build/multiprocMain text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt
+	./build/multiprocMain $(TXTFILES)
 
 runMultithreadMain: cleanMultithreadMain buildMultithread
-	./build/multithreadMain text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt
+	./build/multithreadMain $(TXTFILES)
 
 buildAat: build/main-aat.o build/aat.o build/stack.o build/strbuffer.o
 	gcc build/main-aat.o build/aat.o build/stack.o build/strbuffer.o -o build/aatMain
