@@ -3,12 +3,49 @@ TXTFILES=text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIII
 
 default:
 	mkdir -p build
-	$(MAKE) trace2Multithread1CPU
-	$(MAKE) trace2Multithread2CPU
-	$(MAKE) trace2Multithread3CPU
-	$(MAKE) trace2Multithread4CPU
-	$(MAKE) trace2Multithread5CPU
-	$(MAKE) trace2Multithread6CPU
+	$(MAKE) trace2Multiproc1CPU
+	$(MAKE) trace2Multiproc
+
+trace2Multiproc: cleanMultiprocMain buildMultiproc
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_no_owner_multiproc_results.csv > /dev/null
+
+trace2Multiproc1CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_1_CPU_multiproc_results.csv > /dev/null
+
+trace2Multiproc2CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0-1 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_2_CPU_multiproc_results.csv > /dev/null
+
+trace2Multiproc3CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0-2 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_3_CPU_multiproc_results.csv > /dev/null
+
+trace2Multiproc4CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0-3 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_4_CPU_multiproc_results.csv > /dev/null
+
+trace2Multiproc5CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0-4 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_5_CPU_multiproc_results.csv > /dev/null
+
+trace2Multiproc6CPU: cleanMultiprocMain buildMultiproc
+	taskset -c 0-5 \
+	sudo bpftrace -q ./tracing/trace_no_owner.bt \
+	-c './build/multiprocMain $(TXTFILES)' \
+	| tee tracing/trace_6_CPU_multiproc_results.csv > /dev/null
 
 trace2Multithread: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
