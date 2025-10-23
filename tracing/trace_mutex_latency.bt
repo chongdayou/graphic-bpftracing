@@ -1,0 +1,45 @@
+#!/usr/bin/env/ bpftrace
+
+/* csv columns: timestamp, tid, isMain, tracepoint, lifetime */
+
+// -- global stuffs --
+
+BEGIN {
+	@program_name = "multithreadMain";
+	@mutex_last_lock_timestamp = (uint64)0;
+}
+
+END {
+	clear(@program_name);
+
+	// pthread:mutex
+	clear(@mutex_latency_hist);
+	clear(@mutex_last_lock_timestamp);
+}
+
+interval:ms:10
+{
+	print(@mutex_latency_hist);
+	clear(@mutex_latency_hist);
+}
+
+
+// -- libpthread:mutex --
+
+/*
+record entering pthread_mutex_lock()
+*/
+uprobe:libc:pthread_mutex_lock
+/comm == @program_name/
+{
+	$t = nsecs;
+	// initialize
+	if (@mutex_last_lock_timestamp == 0) {
+		@mutex_last_lock_timestamp = $t;
+		return;
+	}
+
+	$latency = $t - @mutex_last_lock_timestamp;
+	@mutex_last_lock_timestamp = $t;
+	@mutex_latency_hist = hist($latency);
+}

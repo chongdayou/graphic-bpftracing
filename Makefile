@@ -3,8 +3,12 @@ TXTFILES=text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIII
 
 default:
 	mkdir -p build
-	$(MAKE) trace2Multiproc1CPU
-	$(MAKE) trace2Multiproc
+	$(MAKE) trace2Multithread1CPULatencyHist
+
+trace2Multithread1CPULatencyHist: cleanMultithreadMain buildMultithread
+	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	| tee tracing/trace_muetx_latency_1_CPU_results.csv > /dev/null
 
 trace2Multiproc: cleanMultiprocMain buildMultiproc
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
