@@ -1,0 +1,195 @@
+--- Mutex Latency Histograms (tid) @10ms ---
+
+--- Mutex Latency Averages (tid) @10ms ---
+
+
+--- Mutex Latency Histograms (tid) @20ms ---
+
+--- Mutex Latency Averages (tid) @20ms ---
+
+
+--- Mutex Latency Histograms (tid) @30ms ---
+
+--- Mutex Latency Averages (tid) @30ms ---
+
+
+--- Mutex Latency Histograms (tid) @40ms ---
+
+--- Mutex Latency Averages (tid) @40ms ---
+
+
+--- Mutex Latency Histograms (tid) @50ms ---
+
+--- Mutex Latency Averages (tid) @50ms ---
+
+
+--- Mutex Latency Histograms (tid) @60ms ---
+
+--- Mutex Latency Averages (tid) @60ms ---
+
+
+--- Mutex Latency Histograms (tid) @70ms ---
+
+--- Mutex Latency Averages (tid) @70ms ---
+
+
+--- Mutex Latency Histograms (tid) @80ms ---
+
+--- Mutex Latency Averages (tid) @80ms ---
+
+
+--- Mutex Latency Histograms (tid) @90ms ---
+
+--- Mutex Latency Averages (tid) @90ms ---
+
+
+--- Mutex Latency Histograms (tid) @100ms ---
+@mutex_latency_hist[27999]: 
+[4K, 8K)              77 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             19 |@@@@@@@@@@@@                                        |
+[16K, 32K)            19 |@@@@@@@@@@@@                                        |
+[32K, 64K)             6 |@@@@                                                |
+[64K, 128K)            4 |@@                                                  |
+[128K, 256K)           1 |                                                    |
+[256K, 512K)           0 |                                                    |
+[512K, 1M)             1 |                                                    |
+
+@mutex_latency_hist[28001]: 
+[4K, 8K)             131 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             44 |@@@@@@@@@@@@@@@@@                                   |
+[16K, 32K)            10 |@@@                                                 |
+[32K, 64K)             2 |                                                    |
+[64K, 128K)            1 |                                                    |
+[128K, 256K)           1 |                                                    |
+
+@mutex_latency_hist[28000]: 
+[4K, 8K)             179 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             53 |@@@@@@@@@@@@@@@                                     |
+[16K, 32K)            18 |@@@@@                                               |
+[32K, 64K)             5 |@                                                   |
+[64K, 128K)            2 |                                                    |
+[128K, 256K)           1 |                                                    |
+
+@mutex_latency_hist[27998]: 
+[4K, 8K)             302 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)              7 |@                                                   |
+[16K, 32K)             1 |                                                    |
+[32K, 64K)             1 |                                                    |
+
+--- Mutex Latency Averages (tid) @100ms ---
+@mutex_latency_avgs[27998]: 7407
+@mutex_latency_avgs[28001]: 10644
+@mutex_latency_avgs[28000]: 11283
+@mutex_latency_avgs[27999]: 25895
+
+--- Mutex Latency Histograms (tid) @110ms ---
+@mutex_latency_hist[28002]: 
+[4K, 8K)             254 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             69 |@@@@@@@@@@@@@@                                      |
+[16K, 32K)             3 |                                                    |
+[32K, 64K)             5 |@                                                   |
+[64K, 128K)            5 |@                                                   |
+[128K, 256K)           2 |                                                    |
+[256K, 512K)           3 |                                                    |
+[512K, 1M)             5 |@                                                   |
+
+@mutex_latency_hist[28000]: 
+[4K, 8K)             265 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)            146 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@                        |
+[16K, 32K)            21 |@@@@                                                |
+[32K, 64K)             9 |@                                                   |
+[64K, 128K)            3 |                                                    |
+[128K, 256K)           4 |                                                    |
+[256K, 512K)           1 |                                                    |
+[512K, 1M)             3 |                                                    |
+[1M, 2M)               1 |                                                    |
+
+@mutex_latency_hist[27999]: 
+[4K, 8K)             311 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)            122 |@@@@@@@@@@@@@@@@@@@@                                |
+[16K, 32K)            29 |@@@@                                                |
+[32K, 64K)            15 |@@                                                  |
+[64K, 128K)           10 |@                                                   |
+[128K, 256K)           3 |                                                    |
+[256K, 512K)           4 |                                                    |
+[512K, 1M)             3 |                                                    |
+
+@mutex_latency_hist[28001]: 
+[4K, 8K)             370 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             76 |@@@@@@@@@@                                          |
+[16K, 32K)            35 |@@@@                                                |
+[32K, 64K)             5 |                                                    |
+[64K, 128K)            7 |                                                    |
+[128K, 256K)          10 |@                                                   |
+[256K, 512K)           3 |                                                    |
+[512K, 1M)             2 |                                                    |
+
+--- Mutex Latency Averages (tid) @110ms ---
+@mutex_latency_avgs[27999]: 19670
+@mutex_latency_avgs[28001]: 19749
+@mutex_latency_avgs[28000]: 20989
+@mutex_latency_avgs[28002]: 26455
+
+--- Mutex Latency Histograms (tid) @120ms ---
+@mutex_latency_hist[27999]: 
+[4K, 8K)             234 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             81 |@@@@@@@@@@@@@@@@@@                                  |
+[16K, 32K)            10 |@@                                                  |
+[32K, 64K)             8 |@                                                   |
+[64K, 128K)            5 |@                                                   |
+[128K, 256K)           3 |                                                    |
+[256K, 512K)           1 |                                                    |
+[512K, 1M)             2 |                                                    |
+[1M, 2M)               1 |                                                    |
+
+@mutex_latency_hist[28001]: 
+[4K, 8K)             264 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)            102 |@@@@@@@@@@@@@@@@@@@@                                |
+[16K, 32K)            16 |@@@                                                 |
+[32K, 64K)             9 |@                                                   |
+[64K, 128K)            4 |                                                    |
+[128K, 256K)           4 |                                                    |
+[256K, 512K)           7 |@                                                   |
+[512K, 1M)             3 |                                                    |
+[1M, 2M)               1 |                                                    |
+
+@mutex_latency_hist[28000]: 
+[4K, 8K)             400 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)            113 |@@@@@@@@@@@@@@                                      |
+[16K, 32K)            16 |@@                                                  |
+[32K, 64K)             5 |                                                    |
+[64K, 128K)            9 |@                                                   |
+[128K, 256K)           4 |                                                    |
+[256K, 512K)           2 |                                                    |
+[512K, 1M)             2 |                                                    |
+
+@mutex_latency_hist[28002]: 
+[4K, 8K)            1148 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)            201 |@@@@@@@@@                                           |
+[16K, 32K)            24 |@                                                   |
+[32K, 64K)            10 |                                                    |
+[64K, 128K)           11 |                                                    |
+[128K, 256K)           3 |                                                    |
+[256K, 512K)           4 |                                                    |
+[512K, 1M)             5 |                                                    |
+[1M, 2M)               1 |                                                    |
+
+--- Mutex Latency Averages (tid) @120ms ---
+@mutex_latency_avgs[28002]: 13546
+@mutex_latency_avgs[28000]: 15897
+@mutex_latency_avgs[27999]: 20855
+@mutex_latency_avgs[28001]: 26222
+
+--- Mutex Latency Histograms (tid) @130ms ---
+
+--- Mutex Latency Averages (tid) @130ms ---
+
+
+
+
+
+
+
+
+
+

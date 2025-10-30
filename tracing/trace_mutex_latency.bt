@@ -42,6 +42,12 @@ record entering pthread_mutex_lock()
 uprobe:libc:pthread_mutex_lock
 /comm == @program_name/
 {
+
+	// remove main thread
+	if (pid == tid) {
+		return;
+	}
+
 	$t = nsecs;
 	// initialize
 	if (@mutex_last_lock_timestamps[tid] == 0) {
