@@ -6,21 +6,31 @@
 
 BEGIN {
 	@program_name = "multithreadMain";
-	@mutex_last_lock_timestamp = (uint64)0;
+	//@mutex_last_lock_timestamps = (uint64)0;
+	@ms_past = 0;
 }
 
 END {
 	clear(@program_name);
+	clear(@ms_past);
 
 	// pthread:mutex
 	clear(@mutex_latency_hist);
-	clear(@mutex_last_lock_timestamp);
+	clear(@mutex_last_lock_timestamps);
 }
 
 interval:ms:10
 {
+	@ms_past += 10;
+	// Instead of looping, just print the whole map.
+	printf("--- Mutex Latency Histograms (tid) @%dms ---\n", @ms_past);
 	print(@mutex_latency_hist);
 	clear(@mutex_latency_hist);
+
+	// The same for the averages map
+	printf("--- Mutex Latency Averages (tid) @%dms ---\n", @ms_past);
+	print(@mutex_latency_avgs);
+	clear(@mutex_latency_avgs);
 }
 
 
@@ -34,12 +44,13 @@ uprobe:libc:pthread_mutex_lock
 {
 	$t = nsecs;
 	// initialize
-	if (@mutex_last_lock_timestamp == 0) {
-		@mutex_last_lock_timestamp = $t;
+	if (@mutex_last_lock_timestamps[tid] == 0) {
+		@mutex_last_lock_timestamps[tid] = $t;
 		return;
 	}
 
-	$latency = $t - @mutex_last_lock_timestamp;
-	@mutex_last_lock_timestamp = $t;
-	@mutex_latency_hist = hist($latency);
+	$latency = $t - @mutex_last_lock_timestamps[tid];
+	@mutex_last_lock_timestamps[tid] = $t;
+	@mutex_latency_avgs[tid] = avg($latency);
+	@mutex_latency_hist[tid] = hist($latency);
 }
