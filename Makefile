@@ -13,30 +13,30 @@ trace2Multithread1CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_muetx_latency_1_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_1_CPU_results.csv > /dev/null
 
 trace2Multithread2CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-1 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_muetx_latency_2_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_2_CPU_results.csv > /dev/null
 
 trace2Multithread3CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-2 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_muetx_latency_3_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_3_CPU_results.csv > /dev/null
 
 trace2Multithread5CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-4 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_muetx_latency_5_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_5_CPU_results.csv > /dev/null
 
 trace2MultithreadAllCPULatencyHist: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_muetx_latency_All_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_All_CPU_results.csv > /dev/null
 
 trace2Multiproc: cleanMultiprocMain buildMultiproc
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
