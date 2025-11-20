@@ -19,9 +19,9 @@ END {
 	clear(@mutex_last_lock_timestamps);
 }
 
-interval:ms:10
+interval:ms:1
 {
-	@ms_past += 10;
+	@ms_past += 1;
 	// Instead of looping, just print the whole map.
 	printf("--- Mutex Latency Histograms (tid) @%dms ---\n", @ms_past);
 	print(@mutex_latency_hist);
