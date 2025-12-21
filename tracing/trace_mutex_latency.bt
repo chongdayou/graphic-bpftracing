@@ -22,6 +22,10 @@ END {
 interval:ms:1
 {
 	@ms_past += 1;
+	if (len(@mutex_latency_hist) == 0) {
+		return;
+	}
+
 	// Instead of looping, just print the whole map.
 	printf("--- Mutex Latency Histograms (tid) @%dms ---\n", @ms_past);
 	print(@mutex_latency_hist);

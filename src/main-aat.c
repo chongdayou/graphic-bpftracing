@@ -3,7 +3,15 @@
 
 #include "../include/aat.h"
 
+#ifdef DEBUG
+#define measure(data) getrusage(data)....
+#else
+#define measure(data)
+#endif
+
 int main(int argc, char* argv[]) {
+	#undef DEBUG
+	measure(data)
 	size_t n = 100;
 	char* traversal_result;
 	int*  v = malloc(n * sizeof(int));

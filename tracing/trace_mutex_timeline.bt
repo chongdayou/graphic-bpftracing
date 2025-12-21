@@ -1,0 +1,47 @@
+#!/usr/bin/env/ bpftrace
+
+// trace timestamp of mutex_lock and mutex_unlock
+// increase BPFTRACE_PERF_RB_PAGES=1024 to catch the high throughput of output
+// trace ret:mutex_lock to ent:mutex_unlock because the actual unlock function can overlap with lock function in different threads
+// output string format: [timestmap], [function code], [tid]
+// function codes: 0 - uretprobe:mutex_lock, 1 - uprobe:mutex_unlock, 2 - sched_process_fork, 3 - sched_process_exit
+
+BEGIN {
+	@program_name = "multithreadMain";
+}
+
+END {
+	delete(@program_name);
+	clear(@tid_map);
+}
+
+tracepoint:sched:sched_process_fork
+/comm == @program_name/
+{
+	$t = nsecs;
+	@tid_map[args->child_pid] = 1;
+	printf("%llu,2,%d\n", $t, args->child_pid);
+}
+
+tracepoint:sched:sched_process_exit
+/@tid_map[tid]/ // <- if pid exits, return 1, else 0 is auto returned
+{
+	$t = nsecs;
+	delete(@tid_map[tid]);
+	printf("%llu,3,%d\n", $t, tid);
+}
+
+uretprobe:libc:pthread_mutex_lock
+/@tid_map[tid]/
+{
+	$t = nsecs;
+	printf("%llu,0,%d\n", $t, tid);
+}
+
+uprobe:libc:pthread_mutex_unlock
+/@tid_map[tid]/
+{
+	$t = nsecs;
+	printf("%llu,1,%d\n", $t, tid);
+}
+

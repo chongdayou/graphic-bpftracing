@@ -1,42 +1,72 @@
 CFLAGS=-Wall -O2 -MMD -MP -pg
 TXTFILES=text/HamletActISceneII.txt text/HamletActIISceneI.txt text/HamletActIIISceneI.txt text/HamletActIIISceneII.txt text/HamletActIVSceneV.txt
+BPFPAGES=1024
 
 default:
 	mkdir -p build
-	$(MAKE) trace2Multithread1CPULatencyHist
-	$(MAKE) trace2Multithread2CPULatencyHist
-	$(MAKE) trace2Multithread3CPULatencyHist
-	$(MAKE) trace2Multithread5CPULatencyHist
-	$(MAKE) trace2MultithreadAllCPULatencyHist
+	$(MAKE) trace2Multithread1CPUMutexTimeline
+	$(MAKE) trace2Multithread2CPUMutexTimeline
+	$(MAKE) trace2Multithread3CPUMutexTimeline
+	$(MAKE) trace2Multithread5CPUMutexTimeline
+	$(MAKE) trace2MultithreadAllCPUMutexTimeline
+
+trace2Multithread1CPUMutexTimeline: cleanMultithreadMain buildMultithread
+	taskset -c 0 \
+	env BPFTRACE_PERF_RB_PAGES=$(BPFPAGES) sudo -E bpftrace -q ./tracing/trace_mutex_timeline.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	> tracing/trace_mutex_timeline_1_CPU_results.txt 2>&1
+
+trace2Multithread2CPUMutexTimeline: cleanMultithreadMain buildMultithread
+	taskset -c 0-1 \
+	env BPFTRACE_PERF_RB_PAGES=$(BPFPAGES) sudo -E bpftrace -q ./tracing/trace_mutex_timeline.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	> tracing/trace_mutex_timeline_2_CPU_results.txt 2>&1
+
+trace2Multithread3CPUMutexTimeline: cleanMultithreadMain buildMultithread
+	taskset -c 0-2 \
+	env BPFTRACE_PERF_RB_PAGES=$(BPFPAGES) sudo -E bpftrace -q ./tracing/trace_mutex_timeline.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	> tracing/trace_mutex_timeline_3_CPU_results.txt 2>&1
+
+trace2Multithread5CPUMutexTimeline: cleanMultithreadMain buildMultithread
+	taskset -c 0-4 \
+	env BPFTRACE_PERF_RB_PAGES=$(BPFPAGES) sudo -E bpftrace -q ./tracing/trace_mutex_timeline.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	> tracing/trace_mutex_timeline_5_CPU_results.txt 2>&1
+
+trace2MultithreadAllCPUMutexTimeline: cleanMultithreadMain buildMultithread
+	BPFTRACE_PERF_RB_PAGES=$(BPFPAGES) sudo -E bpftrace -q ./tracing/trace_mutex_timeline.bt \
+	-c './build/multithreadMain $(TXTFILES)' \
+	> tracing/trace_mutex_timeline_all_CPU_results.txt 2>&1
 
 trace2Multithread1CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_mutex_latency_1_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_1_CPU_results.txt > /dev/null
 
 trace2Multithread2CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-1 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_mutex_latency_2_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_2_CPU_results.txt > /dev/null
 
 trace2Multithread3CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-2 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_mutex_latency_3_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_3_CPU_results.txt > /dev/null
 
 trace2Multithread5CPULatencyHist: cleanMultithreadMain buildMultithread
 	taskset -c 0-4 \
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_mutex_latency_5_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_5_CPU_results.txt > /dev/null
 
 trace2MultithreadAllCPULatencyHist: cleanMultithreadMain buildMultithread
 	sudo bpftrace -q ./tracing/trace_mutex_latency.bt \
 	-c './build/multithreadMain $(TXTFILES)' \
-	| tee tracing/trace_mutex_latency_All_CPU_results.csv > /dev/null
+	| tee tracing/trace_mutex_latency_all_CPU_results.txt > /dev/null
 
 trace2Multiproc: cleanMultiprocMain buildMultiproc
 	sudo bpftrace -q ./tracing/trace_no_owner.bt \
